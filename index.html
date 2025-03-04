@@ -1,11 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hello!</title>
+  <title>Jiayou Gemini</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 40px; text-align: center; }
+    input { padding: 10px; width: 60%; }
+    button { padding: 10px 20px; margin-left: 10px; }
+    pre { margin-top: 20px; background: #eee; padding: 20px; white-space: pre-wrap; text-align: left; max-width: 800px; margin-inline: auto; }
+  </style>
 </head>
 <body>
-  <h1>Hello, GitHub Pages!</h1>
+  <h1>🚀 Jiayou Gemini</h1>
+
+  <input id="input" placeholder="请输入内容..." />
+  <button onclick="send()">发送</button>
+
+  <pre id="result">等待回复...</pre>
+
+  <script>
+    async function send() {
+      const input = document.getElementById("input").value;
+      if (!input) {
+        alert("请输入内容！");
+        return;
+      }
+      document.getElementById("result").innerText = "🤖 AI 正在思考中...";
+      try {
+        const res = await fetch("https://你的-deno-api.deno.dev/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: input }),
+        });
+        const data = await res.json();
+        document.getElementById("result").innerText = data.reply || "❌ 无响应";
+      } catch (error) {
+        document.getElementById("result").innerText = "❌ 请求失败：" + error;
+      }
+    }
+  </script>
 </body>
 </html>
