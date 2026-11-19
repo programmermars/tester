@@ -14,13 +14,31 @@
 <body>
   <h1>🚀 Jiayou Gemini</h1>
 
+  <p>
+    <input id="endpoint" placeholder="后端地址，例如 https://your-app.deno.dev/api/chat" />
+    <button onclick="saveEndpoint()">保存</button>
+  </p>
+
   <input id="input" placeholder="请输入内容..." />
   <button onclick="send()">发送</button>
 
   <pre id="result">等待回复...</pre>
 
   <script>
+    // The chat backend is not part of this repo: its address is entered once
+    // on the page and remembered in this browser only.
+    const endpointBox = document.getElementById("endpoint");
+    try { endpointBox.value = localStorage.getItem("chatEndpoint") || ""; } catch (e) {}
+    function saveEndpoint() {
+      try { localStorage.setItem("chatEndpoint", endpointBox.value.trim()); } catch (e) {}
+    }
+
     async function send() {
+      const endpoint = endpointBox.value.trim();
+      if (!endpoint) {
+        alert("请先填写后端地址！");
+        return;
+      }
       const input = document.getElementById("input").value;
       if (!input) {
         alert("请输入内容！");
@@ -28,7 +46,7 @@
       }
       document.getElementById("result").innerText = "🤖 AI 正在思考中...";
       try {
-        const res = await fetch("https://你的-deno-api.deno.dev/api/chat", {
+        const res = await fetch(endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ message: input }),
